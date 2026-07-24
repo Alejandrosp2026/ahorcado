@@ -373,6 +373,14 @@ return t.normalize("NFD")
 
 }
 
+function formatearRespuesta(texto){
+
+return texto
+.split("")
+.map(letra=>letra==" " ? "&nbsp;&nbsp;" : letra)
+.join(" ");
+
+}
 
 
 
@@ -597,18 +605,15 @@ bloquear();
 
 if(errores>=7){
 
-
 sonido("perder");
 
-
 document.getElementById("mensaje").innerHTML=
-"☠️ Respuesta:<br>"+respuesta.split(" ").join("   ");
-
+"☠️ Respuesta:<br>"+formatearRespuesta(respuesta);
 
 bloquear();
 
-
 }
+
 
 
 }
