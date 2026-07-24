@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<title>Ahorcado con sonido</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#dceeff,#ffffff);
+text-align:center;
+}
+
+h1{
+color:#004aad;
+font-size:42px;
+}
+
+.contenedor{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:60px;
+padding:20px;
+}
+
+.muneco{
+background:white;
+width:550px;
+height:650px;
+border-radius:25px;
+box-shadow:0 8px 25px #aaa;
+}
+
+
+.juego{
+width:700px;
+}
+
+
+#pregunta{
+
+background:white;
+padding:25px;
+border-radius:20px;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 5px 15px #bbb;
+
+}
+
+
+#palabra{
+
+margin:40px;
+font-size:42px;
+letter-spacing:12px;
+font-weight:bold;
+
+}
+
+
+button{
+
+width:55px;
+height:55px;
+margin:5px;
+border:0;
+border-radius:12px;
+background:#0050b3;
+color:white;
+font-size:20px;
+cursor:pointer;
+
+}
+
+
+button:disabled{
+
+background:#999;
+
+}
+
+
+.nuevo{
+
+width:250px;
+background:#00a859;
+font-size:22px;
+
+}
+
+
+#mensaje{
+
+font-size:32px;
+font-weight:bold;
+margin:25px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>🎯 AHORCADO</h1>
+
+
+<div class="contenedor">
+
+
+<div class="muneco">
+
+<svg width="550" height="650">
+
+
+<g id="p1" opacity="0">
+<rect x="70" y="570" width="300" height="25"
+rx="10" fill="#8B4513"/>
+</g>
+
+
+<g id="p2" opacity="0">
+
+<rect x="130" y="80" width="25" height="490"
+fill="#654321"/>
+
+<rect x="130" y="80" width="240" height="25"
+fill="#654321"/>
+
+</g>
+
+
+<g id="p3" opacity="0">
+
+<line x1="370" y1="100"
+x2="370" y2="180"
+stroke="#222"
+stroke-width="8"/>
+
+</g>
+
+
+
+<g id="p4" opacity="0">
+
+<circle cx="370" cy="240"
+r="60"
+fill="#f4c49a"
+stroke="#333"
+stroke-width="5"/>
+
+<path d="M315 225 Q370 150 425 225"
+fill="#222"/>
+
+<circle cx="350" cy="235" r="7"/>
+<circle cx="390" cy="235" r="7"/>
+
+<path d="M345 275 Q370 295 395 275"
+stroke="#333"
+stroke-width="5"
+fill="none"/>
+
+</g>
+
+
+
+<g id="p5" opacity="0">
+
+<rect x="325" y="300"
+width="90"
+height="160"
+rx="25"
+fill="#0050b3"/>
+
+</g>
+
+
+
+<g id="p6" opacity="0">
+
+<line x1="330" y1="340"
+x2="240" y2="430"
+stroke="#f4c49a"
+stroke-width="25"/>
+
+
+<line x1="410" y1="340"
+x2="500" y2="430"
+stroke="#f4c49a"
+stroke-width="25"/>
+
+</g>
+
+
+
+<g id="p7" opacity="0">
+
+<line x1="350" y1="460"
+x2="280" y2="570"
+stroke="#222"
+stroke-width="25"/>
+
+
+<line x1="390" y1="460"
+x2="460" y2="570"
+stroke="#222"
+stroke-width="25"/>
+
+</g>
+
+
+</svg>
+
+</div>
+
+
+
+
+<div class="juego">
+
+
+<div id="pregunta"></div>
+
+
+<h2>
+Errores restantes:
+<span id="vidas">7</span>
+</h2>
+
+
+<div id="palabra"></div>
+
+
+<div id="teclado"></div>
+
+
+<div id="mensaje"></div>
+
+
+<button class="nuevo" onclick="nuevoJuego()">
+🔄 Nueva pregunta
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<script>
+
+
+const banco=[
+
+
+[
+"En la oferta doble hogar de $129.900 y $119.900, ¿cuántas apps de video puede escoger el cliente?",
+"2 apps de video"
+],
+
+
+[
+"¿Cuál es el valor de cada Multiasistencia adicional?",
+"6300"
+],
+
+
+[
+"¿Cuánto pagaría un cliente adicional por Netflix Básico?",
+"14900"
+],
+
+
+[
+"¿Qué beneficio recibe Camila con la campaña SONATA?",
+"2 meses al 50%"
+],
+
+
+[
+"La campaña ESCARLATA ofrece:",
+"1 mes al 100%"
+],
+
+
+[
+"En planes postpago de $55.900 el cliente puede escoger entre:",
+"Cine o Escudo Claro"
+],
+
+
+[
+"¿Qué es Prosperas?",
+"Un marketplace de creditos"
+],
+
+
+[
+"¿Cuál es el monto mínimo de crédito en Prosperas?",
+"100000"
+],
+
+
+[
+"¿Cuál es el monto máximo de crédito en Prosperas?",
+"20000000"
+],
+
+
+[
+"¿Desde qué aplicaciones se inicia una solicitud Prosperas?",
+"Claro Pay y App Mi Claro"
+],
+
+
+[
+"¿Tiempo de recogida de equipos hogar por App Mi Claro?",
+"48 horas"
+],
+
+
+[
+"Ante falla de internet hogar ¿qué acción seleccionar?",
+"Reiniciar modem"
+],
+
+
+[
+"¿Cuánto tarda el reinicio del módem?",
+"3 minutos"
+],
+
+
+[
+"¿Qué pasa si sale de la pantalla durante el reinicio?",
+"El contador se reinicia"
+],
+
+
+[
+"¿Cuál es la velocidad mínima recomendada para Claro Video?",
+"5 MB"
+]
+
+
+];
+
+
+
+let respuesta="";
+let palabra=[];
+let errores=0;
+
+
+
+function limpiar(t){
+
+return t.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.toUpperCase();
+
+}
+
+
+
+
+function sonido(tipo){
+
+let audio=new AudioContext();
+
+let tono=audio.createOscillator();
+
+let volumen=audio.createGain();
+
+
+tono.connect(volumen);
+
+volumen.connect(audio.destination);
+
+
+
+if(tipo=="acierto"){
+
+tono.frequency.value=800;
+
+}
+
+
+if(tipo=="error"){
+
+tono.frequency.value=200;
+
+}
+
+
+if(tipo=="ganar"){
+
+tono.frequency.value=1000;
+
+}
+
+
+if(tipo=="perder"){
+
+tono.frequency.value=100;
+
+}
+
+
+tono.start();
+
+
+volumen.gain.value=0.2;
+
+
+setTimeout(()=>{
+
+tono.stop();
+
+audio.close();
+
+},300);
+
+
+}
+
+
+
+
+
+function nuevoJuego(){
+
+
+let dato=banco[
+Math.floor(Math.random()*banco.length)
+];
+
+
+document.getElementById("pregunta").innerHTML=
+"❓ "+dato[0];
+
+
+respuesta=limpiar(dato[1]);
+
+
+palabra=[];
+
+
+for(let letra of respuesta){
+
+if(/[A-Z0-9]/.test(letra))
+
+palabra.push("_");
+
+else
+
+palabra.push(letra);
+
+}
+
+
+errores=0;
+
+
+document.getElementById("vidas").innerHTML=7;
+
+document.getElementById("mensaje").innerHTML="";
+
+
+dibujar();
+
+mostrar();
+
+crearTeclado();
+
+
+}
+
+
+
+function mostrar(){
+
+document.getElementById("palabra").innerHTML=
+palabra.join(" ");
+
+}
+
+
+
+function crearTeclado(){
+
+let teclado=document.getElementById("teclado");
+
+teclado.innerHTML="";
+
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+.split("")
+.forEach(letra=>{
+
+
+let boton=document.createElement("button");
+
+boton.innerHTML=letra;
+
+boton.onclick=()=>jugar(letra,boton);
+
+
+teclado.appendChild(boton);
+
+
+});
+
+
+}
+
+
+
+function jugar(letra,boton){
+
+
+boton.disabled=true;
+
+
+let acierto=false;
+
+
+for(let i=0;i<respuesta.length;i++){
+
+if(respuesta[i]==letra){
+
+palabra[i]=letra;
+
+acierto=true;
+
+}
+
+}
+
+
+
+if(acierto){
+
+sonido("acierto");
+
+}else{
+
+
+sonido("error");
+
+
+errores++;
+
+
+document.getElementById("vidas").innerHTML=
+7-errores;
+
+
+dibujar();
+
+
+}
+
+
+mostrar();
+
+
+
+if(!palabra.includes("_")){
+
+
+sonido("ganar");
+
+
+document.getElementById("mensaje").innerHTML=
+"🎉 ¡Respuesta correcta!";
+
+
+bloquear();
+
+
+}
+
+
+
+if(errores>=7){
+
+
+sonido("perder");
+
+
+document.getElementById("mensaje").innerHTML=
+"☠️ Respuesta:<br>"+respuesta;
+
+
+bloquear();
+
+
+}
+
+
+}
+
+
+
+
+function dibujar(){
+
+
+for(let i=1;i<=7;i++){
+
+document.getElementById("p"+i)
+.style.opacity=0;
+
+}
+
+
+for(let i=1;i<=errores;i++){
+
+document.getElementById("p"+i)
+.style.opacity=1;
+
+document.getElementById("p"+i)
+.style.transition="opacity .6s";
+
+}
+
+
+}
+
+
+
+function bloquear(){
+
+document.querySelectorAll("button")
+.forEach(b=>b.disabled=true);
+
+}
+
+
+
+nuevoJuego();
+
+
+</script>
+
+
+</body>
+</html>
