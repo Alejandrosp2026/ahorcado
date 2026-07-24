@@ -375,12 +375,10 @@ return t.normalize("NFD")
 
 function formatearRespuesta(texto){
 
-return texto
-.split("")
-.map(letra=>letra==" " ? "&nbsp;&nbsp;" : letra)
-.join(" ");
+return texto.replace(/ /g,"&nbsp;&nbsp;&nbsp;");
 
 }
+
 
 
 
@@ -501,9 +499,22 @@ crearTeclado();
 function mostrar(){
 
 document.getElementById("palabra").innerHTML =
-palabra.map(letra => letra === " " ? "&nbsp;&nbsp;&nbsp;" : letra).join(" ");
+palabra.map(letra => {
+
+if(letra === "_"){
+return "_";
+}
+
+if(letra === " "){
+return "&nbsp;&nbsp;&nbsp;";
+}
+
+return letra;
+
+}).join("");
 
 }
+
 
 
 
