@@ -500,10 +500,11 @@ crearTeclado();
 
 function mostrar(){
 
-document.getElementById("palabra").innerHTML=
-palabra.join(" ");
+document.getElementById("palabra").innerHTML =
+palabra.map(letra => letra === " " ? "&nbsp;&nbsp;&nbsp;" : letra).join(" ");
 
 }
+
 
 
 
