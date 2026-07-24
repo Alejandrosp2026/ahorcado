@@ -484,6 +484,8 @@ document.getElementById("vidas").innerHTML=7;
 
 document.getElementById("mensaje").innerHTML="";
 
+document.querySelector(".nuevo").disabled=false;
+
 
 dibujar();
 
@@ -661,10 +663,11 @@ document.getElementById("p"+i)
 
 function bloquear(){
 
-document.querySelectorAll("button")
+document.querySelectorAll("#teclado button")
 .forEach(b=>b.disabled=true);
 
 }
+
 
 
 
