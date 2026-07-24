@@ -246,9 +246,10 @@ Errores restantes:
 <div id="mensaje"></div>
 
 
-<button class="nuevo" onclick="nuevoJuego()">
+<button id="nuevoJuego" class="nuevo" onclick="nuevoJuego()">
 🔄 Nueva pregunta
 </button>
+
 
 
 </div>
@@ -484,7 +485,8 @@ document.getElementById("vidas").innerHTML=7;
 
 document.getElementById("mensaje").innerHTML="";
 
-document.querySelector(".nuevo").disabled=false;
+document.getElementById("nuevoJuego").disabled=false;
+
 
 
 dibujar();
@@ -602,19 +604,16 @@ mostrar();
 
 if(!palabra.includes("_")){
 
-
 sonido("ganar");
-
 
 document.getElementById("mensaje").innerHTML=
 "🎉 ¡Respuesta correcta!";
 
-
 bloquear();
 
+return;
 
 }
-
 
 
 if(errores>=7){
@@ -626,8 +625,9 @@ document.getElementById("mensaje").innerHTML=
 
 bloquear();
 
-}
+return;
 
+}
 
 
 }
@@ -664,9 +664,14 @@ document.getElementById("p"+i)
 function bloquear(){
 
 document.querySelectorAll("#teclado button")
-.forEach(b=>b.disabled=true);
+.forEach(boton=>{
+    boton.disabled=true;
+});
+
+document.getElementById("nuevoJuego").disabled=false;
 
 }
+
 
 
 
